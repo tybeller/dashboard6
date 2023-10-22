@@ -5,38 +5,63 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.table-holder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.table-holder table{
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-style: hidden;
+  border: 1px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.table-holder table th{
+  background-color: #3D3A4B;
+  padding: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 10px hidden;
 }
 
-.card {
-  padding: 2em;
+.table-holder table td{
+  background-color: #D3C0CD;
+  color: #3D3A4B;
+  padding: 8px;
+  text-align: left;
+  border-bottom: 5px solid #937666;
 }
 
-.read-the-docs {
-  color: #888;
+.filter-holder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 10px;
+}
+
+.filter-holder input {
+  background-color: #B19994;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: hidden;
+}
+
+.filter-holder select {
+  background-color:#B19994;
+  width: 10%;
+  margin: 8px 0;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: hidden;
 }
