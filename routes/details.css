@@ -1,0 +1,9 @@
+.detail-holder{
+    background-color: #B19994;
+    width: 100%;
+    padding: 20px 50px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: hidden;
+    border-radius: 50px;
+}

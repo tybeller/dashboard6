@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import './App.css'
+
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar} from 'recharts';
 
 function App() {
   // make a api call to "https://api.openbrewerydb.org/v1/breweries" to get a list of breweries
@@ -13,6 +16,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [state, setState] = useState([])
   const [type, setType] = useState([])
+  const [bD, setBD] = useState([{}])
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true)
@@ -22,8 +27,7 @@ function App() {
         setBreweries(data)
         setIsLoading(false)
         console.log(data)
-        getStates(data)
-        getTypes(data)
+        getStats(data)
       })
   }, []);
 
@@ -46,23 +50,81 @@ function App() {
   //implement filters to allow users to filter by state and brewery type
 
   //filter text by name
-  const getStates = (data) => {
+  const getStats = (data) => {
     const states = []
+    const types = []
+    //make a json list of states and the count of each type of brewery in its state
+    const barData = []
+
+
+
     for (let i = 0; i < data.length; i++) {
       if (!states.includes(data[i].state)) {
         states.push(data[i].state)
       }
-    }
-    setState(states)
-  }
-  const getTypes = (data) => {
-    const types = []
-    for (let i = 0; i < data.length; i++) {
       if (!types.includes(data[i].brewery_type)) {
         types.push(data[i].brewery_type)
       }
     }
+    setState(states)
     setType(types)
+
+    for (let i = 0; i < states.length; i++) {
+      barData.push(
+        {
+          name: states[i],
+          micro: 0,
+          regional: 0,
+          brewpub: 0,
+          large: 0,
+          planning: 0,
+          bar: 0,
+          contract: 0,
+          proprietor: 0,
+          closed: 0
+        }
+      )
+    }
+  
+    for (let i = 0; i < data.length; i++) {
+      // for each brewery, find the state in the barData and add 1 to the corresponding type
+      for (let j = 0; j < barData.length; j++) {
+        if (data[i].state === barData[j].name) {
+          switch (data[i].brewery_type) {
+            case "micro":
+              barData[j].micro += 1
+              break;
+            case "regional":
+              barData[j].regional += 1
+              break;
+            case "brewpub":
+              barData[j].brewpub += 1
+              break;
+            case "large":
+              barData[j].large += 1
+              break;
+            case "planning":
+              barData[j].planning += 1
+              break;
+            case "bar":
+              barData[j].bar += 1
+              break;
+            case "contract":
+              barData[j].contract += 1
+              break;
+            case "proprietor":
+              barData[j].proprietor += 1
+              break;
+            case "closed":
+              barData[j].closed += 1
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
+    setBD(barData)
   }
 
   const filterByState = (state) => {
@@ -84,6 +146,12 @@ function App() {
   const filterByName = (name) => {
     setSearch(name)
   }
+
+  const handleRowClick = (id) => {
+    navigate(`/${id}`);
+  }
+
+  
   
 
   return (
@@ -118,6 +186,25 @@ function App() {
       
       </div>
       <div className="table-holder">
+        <BarChart className='barChart' width={1100} height={500} data={bD}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="micro" fill="#8884d8" />
+          <Bar dataKey="regional" fill="#82ca9d" />
+          <Bar dataKey="brewpub" fill="#FF0000" />
+          <Bar dataKey="large" fill="#0000FF" />
+          <Bar dataKey="planning" fill="#00FF00" />
+          <Bar dataKey="bar" fill="#FFFF00" />
+          <Bar dataKey="contract" fill="#FF00FF" />
+          <Bar dataKey="proprietor" fill="#00FFFF" />
+          <Bar dataKey="closed" fill="#000000" />
+
+        </BarChart>
+      </div> 
+      <div className="table-holder">
         <table>
           <thead>
             <tr>
@@ -132,7 +219,7 @@ function App() {
           </thead>
           <tbody>
             {filteredBreweries.map((brewery) => (
-              <tr key={brewery.id}>
+              <tr key={brewery.id} onClick={() => handleRowClick(brewery.id)}>
                 <td key="name">{brewery.name}</td>
                 <td key="type">{brewery.brewery_type}</td>
                 <td key="country">{brewery.country}</td>
